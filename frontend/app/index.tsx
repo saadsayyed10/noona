@@ -1,8 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
+import { useAuth } from "@/hooks/useAuth";
 
 const Home = () => {
+  const { token } = useAuth();
+
   return (
     <View style={styles.container}>
       <Link href={"/(auth)/login"}>

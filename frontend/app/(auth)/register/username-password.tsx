@@ -1,3 +1,4 @@
+import { useSignUp } from "@/hooks/useSignUp";
 import { Link, router } from "expo-router";
 import { ChevronLeft, AtSign, Lock, Eye, EyeOff } from "lucide-react-native";
 import { useState } from "react";
@@ -17,6 +18,7 @@ import {
 
 const UsernamePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { username, setUsername, password, setPassword } = useSignUp();
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -64,6 +66,8 @@ const UsernamePassword = () => {
                     <TextInput
                       placeholder="Username"
                       style={styles.input}
+                      value={username!}
+                      onChangeText={setUsername}
                       autoCapitalize="none"
                     />
                   </View>
@@ -74,6 +78,8 @@ const UsernamePassword = () => {
                       placeholder="Password"
                       style={styles.input}
                       secureTextEntry={!showPassword}
+                      value={password!}
+                      onChangeText={setPassword}
                     />
                     <TouchableOpacity
                       onPress={() => setShowPassword(!showPassword)}

@@ -1,3 +1,4 @@
+import { useSignUp } from "@/hooks/useSignUp";
 import { Link, router } from "expo-router";
 import {
   ChevronLeft,
@@ -25,6 +26,7 @@ import {
 
 const NameEmail = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { name, setName, email, setEmail, setUsername } = useSignUp();
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -71,6 +73,8 @@ const NameEmail = () => {
                     <User2 size={20} color="#939292" style={styles.icon} />
                     <TextInput
                       placeholder="Name"
+                      value={name!}
+                      onChangeText={setName}
                       style={styles.input}
                       autoCapitalize="none"
                     />
@@ -80,6 +84,8 @@ const NameEmail = () => {
                     <Mail size={20} color="#939292" style={styles.icon} />
                     <TextInput
                       placeholder="Email"
+                      value={email!}
+                      onChangeText={setEmail}
                       style={styles.input}
                       autoCapitalize="none"
                     />
@@ -91,9 +97,11 @@ const NameEmail = () => {
             <View style={styles.footer}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() =>
-                  router.push("/(auth)/register/username-password")
-                }
+                onPress={() => {
+                  const newUsername = email?.split("@")[0];
+                  setUsername(newUsername!);
+                  router.push("/(auth)/register/username-password");
+                }}
               >
                 <Text style={styles.buttonText}>Next</Text>
               </TouchableOpacity>

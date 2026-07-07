@@ -1,3 +1,6 @@
+import { registerUserAPI } from "@/api/user.api";
+import { useAuth } from "@/hooks/useAuth";
+import { useSignUp } from "@/hooks/useSignUp";
 import { Link, router } from "expo-router";
 import { ChevronLeft, AtSign, Lock, Eye, EyeOff } from "lucide-react-native";
 import { useState } from "react";
@@ -16,7 +19,40 @@ import {
 } from "react-native";
 
 const ConfirmPassword = () => {
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const { name, email, username, password, reset } = useSignUp();
+  const { setAuth } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSignUp = async () => {
+    if (confirmPassword != password) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await registerUserAPI(name!, email!, username!, password!)
+        .then((res) => {
+          console.log(res.data.message);
+          const { token, user } = res.data;
+
+          setAuth(token, user);
+          router.push("/(auth)/register/success");
+        })
+        .catch((err) => {
+          console.log(JSON.stringify(err.response?.data, null, 2));
+          alert(err.response?.data?.message ?? "Something went wrong");
+        });
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -65,6 +101,8 @@ const ConfirmPassword = () => {
                       placeholder="Confirm Password"
                       style={styles.input}
                       secureTextEntry={!showPassword}
+                      value={confirmPassword}
+                      onChangeText={setConfirmPassword}
                     />
                     <TouchableOpacity
                       onPress={() => setShowPassword(!showPassword)}
@@ -86,10 +124,7 @@ const ConfirmPassword = () => {
             </View>
 
             <View style={styles.footer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => router.push("/(auth)/register/success")}
-              >
+              <TouchableOpacity style={styles.button} onPress={handleSignUp}>
                 <Text style={styles.buttonText}>Create Account</Text>
               </TouchableOpacity>
             </View>

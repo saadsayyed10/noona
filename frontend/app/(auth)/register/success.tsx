@@ -1,7 +1,17 @@
+import { useAuth } from "@/hooks/useAuth";
+import { useSignUp } from "@/hooks/useSignUp";
 import { router } from "expo-router";
+import { useEffect } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const SuccessRegistration = () => {
+  const { hydrate, token } = useAuth();
+  const { reset } = useSignUp();
+
+  useEffect(() => {
+    hydrate();
+  }, [token]);
+
   return (
     <View style={styles.container}>
       <View style={styles.top}>
@@ -25,7 +35,10 @@ const SuccessRegistration = () => {
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.replace("/")}
+          onPress={() => {
+            reset();
+            router.replace("/");
+          }}
         >
           <Text style={styles.buttonText}>Start Exploring</Text>
         </TouchableOpacity>
