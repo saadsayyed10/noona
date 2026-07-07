@@ -4,13 +4,23 @@ import { Link } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";
 
 const Home = () => {
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
 
   return (
     <View style={styles.container}>
-      <Link href={"/(auth)/login"}>
-        <Text>Login Screen</Text>
-      </Link>
+      {token ? (
+        <Text
+          onPress={() => {
+            logout();
+          }}
+        >
+          Logout
+        </Text>
+      ) : (
+        <Link href={"/(auth)/login"}>
+          <Text>Login Screen</Text>
+        </Link>
+      )}
     </View>
   );
 };

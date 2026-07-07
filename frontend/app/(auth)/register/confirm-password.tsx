@@ -16,6 +16,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 
 const ConfirmPassword = () => {
@@ -125,7 +126,11 @@ const ConfirmPassword = () => {
 
             <View style={styles.footer}>
               <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-                <Text style={styles.buttonText}>Create Account</Text>
+                {loading ? (
+                  <ActivityIndicator />
+                ) : (
+                  <Text style={styles.buttonText}>Create Account</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>

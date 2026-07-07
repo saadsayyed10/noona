@@ -1,4 +1,6 @@
-import { Link } from "expo-router";
+import { loginUserAPI } from "@/api/user.api";
+import { useAuth } from "@/hooks/useAuth";
+import { Link, useRouter } from "expo-router";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react-native";
 import { useState } from "react";
 import {
@@ -13,10 +15,38 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { setAuth, hydrate } = useAuth();
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true);
+    try {
+      const res = await loginUserAPI(email, password);
+      const { token, user } = res.data;
+
+      setAuth(token, user);
+
+      setEmail("");
+      setPassword("");
+      hydrate();
+
+      router.push("/");
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -49,6 +79,8 @@ const Login = () => {
                       placeholder="Email"
                       style={styles.input}
                       autoCapitalize="none"
+                      value={email}
+                      onChangeText={setEmail}
                     />
                   </View>
 
@@ -58,6 +90,8 @@ const Login = () => {
                       placeholder="Password"
                       style={styles.input}
                       secureTextEntry={!showPassword}
+                      value={password}
+                      onChangeText={setPassword}
                     />
                     <TouchableOpacity
                       onPress={() => setShowPassword(!showPassword)}
@@ -75,15 +109,22 @@ const Login = () => {
             </View>
 
             <View style={styles.footer}>
-              <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Login</Text>
+              <TouchableOpacity onPress={handleLogin} style={styles.button}>
+                {loading ? (
+                  <ActivityIndicator />
+                ) : (
+                  <Text style={styles.buttonText}>Login</Text>
+                )}
               </TouchableOpacity>
 
               <Text>
                 Don't have an account?{" "}
-                <Link href={"/(auth)/register/name-email"}>
-                  <Text style={styles.registerText}>Register</Text>
-                </Link>
+                <Text
+                  onPress={() => router.replace("/register/name-email")}
+                  style={styles.registerText}
+                >
+                  Register
+                </Text>
               </Text>
             </View>
           </View>
