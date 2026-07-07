@@ -103,7 +103,19 @@ const UsernamePassword = () => {
             <View style={styles.footer}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => router.push("/(auth)/register/confirm-password")}
+                onPress={() => {
+                  if (!username) {
+                    alert("Please enter username");
+                    return;
+                  }
+
+                  if (!password) {
+                    alert("Please enter password");
+                    return;
+                  }
+
+                  router.push("/(auth)/register/confirm-password");
+                }}
               >
                 <Text style={styles.buttonText}>Next</Text>
               </TouchableOpacity>

@@ -15,7 +15,7 @@ export const useAuth = create<AuthState>((set) => ({
 
   setAuth: async (token, user) => {
     await AsyncStorage.setItem("token", token);
-    await AsyncStorage.setItem("user", user);
+    await AsyncStorage.setItem("user", JSON.stringify(user));
     set({ token, user });
   },
 
@@ -26,9 +26,14 @@ export const useAuth = create<AuthState>((set) => ({
   },
 
   hydrate: async () => {
-    const token = await AsyncStorage.getItem("token");
-    const user = await AsyncStorage.getItem("user");
-
-    set({ token: token, user: user ? JSON.parse(user) : null });
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const userStr = await AsyncStorage.getItem("user");
+      set({ token, user: userStr ? JSON.parse(userStr) : null });
+    } catch (e) {
+      console.log("Failed to hydrate auth state:", e);
+      await AsyncStorage.multiRemove(["token", "user"]);
+      set({ token: null, user: null });
+    }
   },
 }));

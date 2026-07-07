@@ -29,22 +29,38 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
+    if (!email) {
+      alert("Please enter email to login");
+      return;
+    }
+
+    if (!password) {
+      alert("Please enter password to login");
+      return;
+    }
+
+    if (password.length < 8) {
+      alert("Please enter valid password");
+      return;
+    }
+
     setLoading(true);
     try {
-      const res = await loginUserAPI(email, password);
-      const { token, user } = res.data;
-
-      setAuth(token, user);
-
-      setEmail("");
-      setPassword("");
-      hydrate();
-
-      router.push("/");
+      await loginUserAPI(email, password)
+        .then((res) => {
+          const { token, user } = res.data;
+          setAuth(token, user);
+          router.push("/");
+        })
+        .catch((err) => {
+          alert(err.response.data.error);
+        });
     } catch (error: any) {
       alert(error.message);
     } finally {
       setLoading(false);
+      setEmail("");
+      setPassword("");
     }
   };
 
@@ -111,7 +127,7 @@ const Login = () => {
             <View style={styles.footer}>
               <TouchableOpacity onPress={handleLogin} style={styles.button}>
                 {loading ? (
-                  <ActivityIndicator />
+                  <ActivityIndicator color={"white"} />
                 ) : (
                   <Text style={styles.buttonText}>Login</Text>
                 )}

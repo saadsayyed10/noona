@@ -46,7 +46,7 @@ const ConfirmPassword = () => {
         })
         .catch((err) => {
           console.log(JSON.stringify(err.response?.data, null, 2));
-          alert(err.response?.data?.message ?? "Something went wrong");
+          alert(err.response?.data?.error ?? "Something went wrong");
         });
     } catch (error: any) {
       alert(error.message);
@@ -127,7 +127,7 @@ const ConfirmPassword = () => {
             <View style={styles.footer}>
               <TouchableOpacity style={styles.button} onPress={handleSignUp}>
                 {loading ? (
-                  <ActivityIndicator />
+                  <ActivityIndicator color={"white"} />
                 ) : (
                   <Text style={styles.buttonText}>Create Account</Text>
                 )}

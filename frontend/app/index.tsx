@@ -1,21 +1,28 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";
 
 const Home = () => {
-  const { token, logout } = useAuth();
+  const { hydrate, token, logout } = useAuth();
+
+  useEffect(() => {
+    hydrate();
+  }, [token]);
 
   return (
     <View style={styles.container}>
       {token ? (
-        <Text
-          onPress={() => {
-            logout();
-          }}
-        >
-          Logout
-        </Text>
+        <View>
+          <Text
+            onPress={() => {
+              logout();
+            }}
+          >
+            Logout
+          </Text>
+          <Text>{token}</Text>
+        </View>
       ) : (
         <Link href={"/(auth)/login"}>
           <Text>Login Screen</Text>

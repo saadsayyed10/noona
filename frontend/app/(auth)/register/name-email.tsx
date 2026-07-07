@@ -1,15 +1,6 @@
 import { useSignUp } from "@/hooks/useSignUp";
-import { Link, router } from "expo-router";
-import {
-  ChevronLeft,
-  AtSign,
-  Lock,
-  Eye,
-  EyeOff,
-  User2,
-  Mail,
-} from "lucide-react-native";
-import { useState } from "react";
+import { router } from "expo-router";
+import { ChevronLeft, User2, Mail } from "lucide-react-native";
 import {
   View,
   Image,
@@ -25,7 +16,6 @@ import {
 } from "react-native";
 
 const NameEmail = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const { name, setName, email, setEmail, setUsername } = useSignUp();
 
   return (
@@ -100,6 +90,17 @@ const NameEmail = () => {
                 onPress={() => {
                   const newUsername = email?.split("@")[0];
                   setUsername(newUsername!);
+
+                  if (!name) {
+                    alert("Please enter name");
+                    return;
+                  }
+
+                  if (!email) {
+                    alert("Please enter email address");
+                    return;
+                  }
+
                   router.push("/(auth)/register/username-password");
                 }}
               >
