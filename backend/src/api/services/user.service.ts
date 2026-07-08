@@ -84,3 +84,14 @@ export const fetchUserProfileService = async (userId: string) => {
     },
   });
 };
+
+export const fetchAllUsersService = async () => {
+  return await prisma.users.findMany({
+    select: {
+      id: true,
+      name: true,
+      username: true,
+      profilePicUrl: true,
+    },
+  });
+};

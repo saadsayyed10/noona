@@ -5,6 +5,11 @@ import { protectAuth } from "../../middleware/authMiddleware";
 const userRouter = Router();
 
 userRouter.get(
+  "/profile/all",
+  protectAuth,
+  controllers.fetchAllUsersController,
+);
+userRouter.get(
   "/profile/:id",
   protectAuth,
   controllers.fetchUserProfileController,

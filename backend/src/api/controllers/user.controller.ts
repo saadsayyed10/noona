@@ -92,3 +92,21 @@ export const fetchUserProfileController = async (
     return res.status(500).json({ error: error.message });
   }
 };
+
+export const fetchAllUsersController = async (req: Request, res: Response) => {
+  let errorMessage;
+  try {
+    if (!(req as any).user) {
+      errorMessage =
+        "Unauthorized: Valid token is required to fetch user profile";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const users = await userServices.fetchAllUsersService();
+    res.status(200).json({ total: users.length, users });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};
