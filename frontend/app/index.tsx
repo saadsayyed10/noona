@@ -22,6 +22,9 @@ const Home = () => {
             Logout
           </Text>
           <Text>{token}</Text>
+          <Link href={"/(tabs)/home"}>
+            <Text>Home</Text>
+          </Link>
         </View>
       ) : (
         <Link href={"/(auth)/login"}>

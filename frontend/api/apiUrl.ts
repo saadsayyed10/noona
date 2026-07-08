@@ -1,3 +1,3 @@
 export const apiUrl =
-  process.env.EXPO_PUBLIC_API_URL ||
-  "https://noona-production-32f7.up.railway.app/api";
+  process.env.EXPO_PUBLIC_API_URL! ||
+  "https://noona-production-c2a5.up.railway.app/api";
