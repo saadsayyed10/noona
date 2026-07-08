@@ -52,3 +52,120 @@ export const loginUserController = async (req: Request, res: Response) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+export const checkUsernameController = async (req: Request, res: Response) => {
+  try {
+    const { username } = req.query;
+
+    await userServices.checkUsernameService(username as string);
+    res.status(200).json({ message: `${username} is available` });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+export const fetchUserProfileController = async (
+  req: Request,
+  res: Response,
+) => {
+  let errorMessage;
+  try {
+    const { id } = req.params;
+    if (!id) {
+      errorMessage = "User ID not found in params";
+      console.log(errorMessage);
+      return res.status(404).json({ error: errorMessage });
+    }
+
+    if (!(req as any).user) {
+      errorMessage =
+        "Unauthorized: Valid token is required to fetch user profile";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const user = await userServices.fetchUserProfileService(id as string);
+    res.status(200).json({ message: "User profile", user });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+export const fetchAllUsersController = async (req: Request, res: Response) => {
+  let errorMessage;
+  try {
+    if (!(req as any).user) {
+      errorMessage =
+        "Unauthorized: Valid token is required to fetch user profile";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const users = await userServices.fetchAllUsersService();
+    res.status(200).json({ total: users.length, users });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+export const updateUserProfileController = async (
+  req: Request,
+  res: Response,
+) => {
+  let errorMessage;
+  try {
+    const { name, username, profilePicUrl, bio } = req.body;
+
+    const data = { name, username, profilePicUrl, bio };
+    if (!data) {
+      errorMessage = "Required fields are missing";
+      console.log(errorMessage);
+      return res.status(404).json({ error: errorMessage });
+    }
+
+    if (!(req as any).user) {
+      errorMessage =
+        "Unauthorized: Valid token is required to update user profile";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const user = await userServices.updateUserProfileService(
+      (req as any).user.id,
+      name,
+      username,
+      profilePicUrl,
+      bio,
+    );
+    res.status(200).json({ message: "User updated", user });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const deleteUserProfileController = async (
+  req: Request,
+  res: Response,
+) => {
+  let errorMessage;
+  try {
+    if (!(req as any).user) {
+      errorMessage =
+        "Unauthorized: Valid token is required to delete user profile";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const user = await userServices.deleteUserProfileService(
+      (req as any).user.id,
+    );
+    res.status(200).json({ message: "User deleted", user });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};

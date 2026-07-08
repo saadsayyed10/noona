@@ -52,3 +52,74 @@ export const loginUserService = async (email: string, password: string) => {
 
   return { token, user: existingUser };
 };
+
+export const checkUsernameService = async (username: string) => {
+  const user = await prisma.users.findUnique({
+    where: {
+      username,
+    },
+  });
+
+  if (user?.username === username) {
+    throw new Error("This username is taken");
+  }
+
+  return user;
+};
+
+export const fetchUserProfileService = async (userId: string) => {
+  return await prisma.users.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      friends: true,
+      username: true,
+      bio: true,
+      profilePicUrl: true,
+      createdAt: true,
+    },
+  });
+};
+
+export const fetchAllUsersService = async () => {
+  return await prisma.users.findMany({
+    select: {
+      id: true,
+      name: true,
+      username: true,
+      profilePicUrl: true,
+    },
+  });
+};
+
+export const updateUserProfileService = async (
+  userId: string,
+  name: string,
+  username: string,
+  profilePicUrl: string,
+  bio: string,
+) => {
+  return await prisma.users.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      name,
+      username,
+      bio,
+      profilePicUrl,
+    },
+  });
+};
+
+export const deleteUserProfileService = async (userId: string) => {
+  return await prisma.users.delete({
+    where: {
+      id: userId,
+    },
+  });
+};

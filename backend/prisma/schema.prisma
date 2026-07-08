@@ -8,11 +8,25 @@ datasource db {
 }
 
 model users {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  username      String   @unique
+  password      String
+  profilePicUrl String?
+  bio           String?
+  friends       String[]
+  createdAt     DateTime @default(now())
+
+  ratings ratings[]
+}
+
+model ratings {
   id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  username  String   @unique
-  password  String
-  friends   String[]
+  stars     Int
+  feedback  String
   createdAt DateTime @default(now())
+
+  usersId String?
+  users   users?  @relation(fields: [usersId], references: [id])
 }
