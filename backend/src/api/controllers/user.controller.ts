@@ -57,8 +57,8 @@ export const checkUsernameController = async (req: Request, res: Response) => {
   try {
     const { username } = req.query;
 
-    const user = userServices.checkUsernameService(username as string);
-    res.status(200).json({ user });
+    await userServices.checkUsernameService(username as string);
+    res.status(200).json({ message: `${username} is available` });
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ error: error.message });
