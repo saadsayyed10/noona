@@ -8,11 +8,13 @@ datasource db {
 }
 
 model users {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  username  String   @unique
-  password  String
-  friends   String[]
-  createdAt DateTime @default(now())
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  username      String   @unique
+  password      String
+  profilePicUrl String?
+  bio           String?
+  friends       String[]
+  createdAt     DateTime @default(now())
 }

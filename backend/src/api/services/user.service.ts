@@ -66,3 +66,21 @@ export const checkUsernameService = async (username: string) => {
 
   return user;
 };
+
+export const fetchUserProfileService = async (userId: string) => {
+  return await prisma.users.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      friends: true,
+      username: true,
+      bio: true,
+      profilePicUrl: true,
+      createdAt: true,
+    },
+  });
+};

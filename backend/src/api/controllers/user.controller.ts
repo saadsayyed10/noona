@@ -64,3 +64,31 @@ export const checkUsernameController = async (req: Request, res: Response) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+export const fetchUserProfileController = async (
+  req: Request,
+  res: Response,
+) => {
+  let errorMessage;
+  try {
+    const { id } = req.params;
+    if (!id) {
+      errorMessage = "User ID not found in params";
+      console.log(errorMessage);
+      return res.status(404).json({ error: errorMessage });
+    }
+
+    if (!(req as any).user) {
+      errorMessage =
+        "Unauthorized: Valid token is required to fetch user profile";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const user = await userServices.fetchUserProfileService(id as string);
+    res.status(200).json({ message: "User profile", user });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};
