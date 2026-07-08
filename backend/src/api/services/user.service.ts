@@ -52,3 +52,17 @@ export const loginUserService = async (email: string, password: string) => {
 
   return { token, user: existingUser };
 };
+
+export const checkUsernameService = async (username: string) => {
+  const user = await prisma.users.findUnique({
+    where: {
+      username,
+    },
+  });
+
+  if (user?.username === username) {
+    throw new Error("This username is taken");
+  }
+
+  return user;
+};

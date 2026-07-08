@@ -52,3 +52,15 @@ export const loginUserController = async (req: Request, res: Response) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+export const checkUsernameController = async (req: Request, res: Response) => {
+  try {
+    const { username } = req.query;
+
+    const user = userServices.checkUsernameService(username as string);
+    res.status(200).json({ user });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};
