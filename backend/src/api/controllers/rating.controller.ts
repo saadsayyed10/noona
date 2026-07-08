@@ -11,7 +11,7 @@ export const submitRatingController = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Required fields are missing" });
     }
 
-    if ((req as any).user) {
+    if (!(req as any).user) {
       console.log("Unauthorized: Please login to submit ratings");
       return res
         .status(401)
@@ -19,7 +19,7 @@ export const submitRatingController = async (req: Request, res: Response) => {
     }
 
     const rating = await submitRatingService(
-      (req as any).user.id,
+      (req as any).user.id!,
       stars,
       feedback,
     );
