@@ -19,6 +19,11 @@ userRouter.put(
   protectAuth,
   controllers.updateUserProfileController,
 );
+userRouter.delete(
+  "/profile",
+  protectAuth,
+  controllers.deleteUserProfileController,
+);
 
 userRouter.post("/auth/register", controllers.registerUserController);
 userRouter.post("/auth/login", controllers.loginUserController);

@@ -128,7 +128,7 @@ export const updateUserProfileController = async (
 
     if (!(req as any).user) {
       errorMessage =
-        "Unauthorized: Valid token is required to fetch user profile";
+        "Unauthorized: Valid token is required to update user profile";
       console.log(errorMessage);
       return res.status(401).json({ error: errorMessage });
     }
@@ -141,6 +141,29 @@ export const updateUserProfileController = async (
       bio,
     );
     res.status(200).json({ message: "User updated", user });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const deleteUserProfileController = async (
+  req: Request,
+  res: Response,
+) => {
+  let errorMessage;
+  try {
+    if (!(req as any).user) {
+      errorMessage =
+        "Unauthorized: Valid token is required to delete user profile";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const user = await userServices.deleteUserProfileService(
+      (req as any).user.id,
+    );
+    res.status(200).json({ message: "User deleted", user });
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ error: error.message });

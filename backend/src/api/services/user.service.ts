@@ -115,3 +115,11 @@ export const updateUserProfileService = async (
     },
   });
 };
+
+export const deleteUserProfileService = async (userId: string) => {
+  return await prisma.users.delete({
+    where: {
+      id: userId,
+    },
+  });
+};
