@@ -14,6 +14,11 @@ userRouter.get(
   protectAuth,
   controllers.fetchUserProfileController,
 );
+userRouter.put(
+  "/profile",
+  protectAuth,
+  controllers.updateUserProfileController,
+);
 
 userRouter.post("/auth/register", controllers.registerUserController);
 userRouter.post("/auth/login", controllers.loginUserController);

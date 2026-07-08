@@ -95,3 +95,23 @@ export const fetchAllUsersService = async () => {
     },
   });
 };
+
+export const updateUserProfileService = async (
+  userId: string,
+  name: string,
+  username: string,
+  profilePicUrl: string,
+  bio: string,
+) => {
+  return await prisma.users.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      name,
+      username,
+      bio,
+      profilePicUrl,
+    },
+  });
+};

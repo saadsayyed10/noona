@@ -61,7 +61,7 @@ export const checkUsernameController = async (req: Request, res: Response) => {
     res.status(200).json({ message: `${username} is available` });
   } catch (error: any) {
     console.log(error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(400).json({ error: error.message });
   }
 };
 
@@ -89,7 +89,7 @@ export const fetchUserProfileController = async (
     res.status(200).json({ message: "User profile", user });
   } catch (error: any) {
     console.log(error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(400).json({ error: error.message });
   }
 };
 
@@ -105,6 +105,42 @@ export const fetchAllUsersController = async (req: Request, res: Response) => {
 
     const users = await userServices.fetchAllUsersService();
     res.status(200).json({ total: users.length, users });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+export const updateUserProfileController = async (
+  req: Request,
+  res: Response,
+) => {
+  let errorMessage;
+  try {
+    const { name, username, profilePicUrl, bio } = req.body;
+
+    const data = { name, username, profilePicUrl, bio };
+    if (!data) {
+      errorMessage = "Required fields are missing";
+      console.log(errorMessage);
+      return res.status(404).json({ error: errorMessage });
+    }
+
+    if (!(req as any).user) {
+      errorMessage =
+        "Unauthorized: Valid token is required to fetch user profile";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const user = await userServices.updateUserProfileService(
+      (req as any).user.id,
+      name,
+      username,
+      profilePicUrl,
+      bio,
+    );
+    res.status(200).json({ message: "User updated", user });
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ error: error.message });
