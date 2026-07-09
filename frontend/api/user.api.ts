@@ -21,3 +21,11 @@ export const loginUserAPI = async (email: string, password: string) => {
     password,
   });
 };
+
+export const fetchUserProfileAPI = async (token: string, userId: string) => {
+  return await axios.get(`${apiUrl}/user/profile/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
