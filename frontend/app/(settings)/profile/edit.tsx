@@ -249,13 +249,11 @@ const EditProfile = () => {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
           {updateLoading ? (
             <ActivityIndicator color={"white"} />
           ) : (
-            <Text style={styles.buttonText} onPress={handleUpdateProfile}>
-              Update Profile
-            </Text>
+            <Text style={styles.buttonText}>Update Profile</Text>
           )}
         </TouchableOpacity>
       </ScrollView>
