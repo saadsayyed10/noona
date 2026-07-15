@@ -29,3 +29,21 @@ export const fetchUserProfileAPI = async (token: string, userId: string) => {
     },
   });
 };
+
+export const updateUserProfileAPI = async (
+  name: string,
+  username: string,
+  profilePicUrl: string,
+  bio: string,
+  token: string,
+) => {
+  return await axios.put(
+    `${apiUrl}/user/profile`,
+    { name, username, profilePicUrl, bio },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+};

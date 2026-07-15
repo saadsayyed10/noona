@@ -38,6 +38,7 @@ const EditProfile = () => {
   const [bio, setBio] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
   const [profileUpdateComplete, setProfileUpdateComplete] = useState(false);
 
   const handleFetchProfile = async () => {
@@ -58,6 +59,16 @@ const EditProfile = () => {
       alert(error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    setUpdateLoading(true);
+    try {
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
