@@ -12,6 +12,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -146,9 +147,14 @@ const Settings = () => {
             source={{ uri: profile.profilePicUrl }}
             style={styles.avatar}
           />
-          <Pressable style={styles.cameraBadge}>
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/(settings)/profile/edit");
+            }}
+            style={styles.cameraBadge}
+          >
             <Ionicons name="camera" size={16} color="#fff" />
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         <Text style={styles.name}>{profile.name}</Text>
@@ -162,7 +168,13 @@ const Settings = () => {
 
       {/* Options */}
       <View style={styles.optionsGroup}>
-        <SettingsItem icon="person-outline" label="Edit Profile" />
+        <SettingsItem
+          icon="person-outline"
+          label="Edit Profile"
+          onPress={() => {
+            router.push("/(settings)/profile/edit");
+          }}
+        />
         <SettingsItem icon="lock-closed-outline" label="Change Password" />
         <SettingsItem icon="people-outline" label="Chingudeul (Friends)" />
         <SettingsItem icon="star-outline" label="Rate the App" />
