@@ -1,6 +1,11 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useSignUp } from "@/hooks/useSignUp";
-import { router } from "expo-router";
+import {
+  ExternalPathString,
+  RelativePathString,
+  router,
+  useRouter,
+} from "expo-router";
 import { useEffect } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 
@@ -13,6 +18,8 @@ const Success = ({
 }) => {
   const { hydrate, token } = useAuth();
   const { reset } = useSignUp();
+
+  const router = useRouter();
 
   useEffect(() => {
     hydrate();
@@ -42,7 +49,12 @@ const Success = ({
             router.replace("/settings");
           }}
         >
-          <Text style={styles.buttonText}>OK</Text>
+          <Text
+            style={styles.buttonText}
+            onPress={() => router.replace("/settings")}
+          >
+            OK
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

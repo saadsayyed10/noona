@@ -1,6 +1,8 @@
 import { fetchUserProfileAPI } from "@/api/user.api";
+import SettingsNav from "@/components/custom/SettingsNav";
 import Success from "@/components/custom/Success";
 import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
@@ -27,6 +29,8 @@ interface UserProfile {
 const EditProfile = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const { token, user } = useAuth();
+
+  const router = useRouter();
 
   const [profilePicUrl, setProfilePicUrl] = useState("");
   const [name, setName] = useState("");
@@ -89,24 +93,7 @@ const EditProfile = () => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            flexDirection: "row",
-            marginTop: 40,
-          }}
-        >
-          <TouchableOpacity>
-            <ChevronLeft size={32} />
-          </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontWeight: "700", color: "#1c1c1e" }}>
-            Edit Profile
-          </Text>
-          <View />
-        </View>
+        <SettingsNav header="Edit Profile" />
 
         <TouchableOpacity
           style={{
