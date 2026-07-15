@@ -21,3 +21,37 @@ export const loginUserAPI = async (email: string, password: string) => {
     password,
   });
 };
+
+export const fetchUserProfileAPI = async (token: string, userId: string) => {
+  return await axios.get(`${apiUrl}/user/profile/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const updateUserProfileAPI = async (
+  name: string,
+  username: string,
+  profilePicUrl: string,
+  bio: string,
+  token: string,
+) => {
+  return await axios.put(
+    `${apiUrl}/user/profile`,
+    { name, username, profilePicUrl, bio },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+};
+
+export const deleteUserProfileAPI = async (token: string) => {
+  return await axios.delete(`${apiUrl}/user/profile`, {
+    headers: {
+      Authorization: `Bearer ${token!}`,
+    },
+  });
+};
