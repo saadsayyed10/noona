@@ -1,9 +1,9 @@
-import { fetchUserProfileAPI } from "@/api/user.api";
+import * as ImagePicker from "expo-image-picker";
+import { fetchUserProfileAPI, updateUserProfileAPI } from "@/api/user.api";
 import SettingsNav from "@/components/custom/SettingsNav";
 import Success from "@/components/custom/Success";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "expo-router";
-import { ChevronLeft } from "lucide-react-native";
+import { handleImageUpload } from "@/utils/uploadImageToSupabase";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -30,9 +30,9 @@ const EditProfile = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const { token, user } = useAuth();
 
-  const router = useRouter();
-
   const [profilePicUrl, setProfilePicUrl] = useState("");
+  const [pickedImage, setPickedImage] =
+    useState<ImagePicker.ImagePickerAsset | null>(null);
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
@@ -62,9 +62,62 @@ const EditProfile = () => {
     }
   };
 
+  const pickImage = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permission.granted) {
+      alert("Permission to access gallery is required!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets.length > 0) {
+      const asset = result.assets[0];
+      setPickedImage(asset);
+      setProfilePicUrl(asset.uri); // instant preview
+    }
+  };
+
   const handleUpdateProfile = async () => {
     setUpdateLoading(true);
     try {
+      let finalProfilePicUrl = profilePicUrl;
+
+      if (pickedImage) {
+        const response = await fetch(pickedImage.uri);
+        const blob = await response.blob();
+
+        const fileExt = pickedImage.uri.split(".").pop() || "jpg";
+        const fileNameHint = `profile.${fileExt}`;
+
+        const { publicUrl } = await handleImageUpload(
+          blob,
+          fileNameHint,
+          "profilepic",
+        );
+
+        finalProfilePicUrl = publicUrl;
+      }
+
+      await updateUserProfileAPI(
+        name,
+        username.toLocaleLowerCase(),
+        finalProfilePicUrl,
+        bio,
+        token!,
+      )
+        .then(() => {
+          setProfileUpdateComplete(true);
+        })
+        .catch((err) => {
+          alert(err.data.response?.error);
+        });
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -81,6 +134,7 @@ const EditProfile = () => {
       <Success
         title="Account Updated!"
         description="Your profile has been successfully updated."
+        setProfileUpdateComplete={setProfileUpdateComplete}
       />
     );
   }
@@ -107,6 +161,7 @@ const EditProfile = () => {
         <SettingsNav header="Edit Profile" />
 
         <TouchableOpacity
+          onPress={pickImage}
           style={{
             display: "flex",
             justifyContent: "center",
@@ -137,7 +192,7 @@ const EditProfile = () => {
             justifyContent: "flex-start",
             alignItems: "flex-start",
             width: "100%",
-            gap: 10,
+            gap: 20,
           }}
         >
           <View
@@ -149,7 +204,7 @@ const EditProfile = () => {
               gap: 6,
             }}
           >
-            <Text>Full name</Text>
+            <Text style={{ fontWeight: 600 }}>Full name</Text>
             <TextInput
               style={{
                 width: "100%",
@@ -175,7 +230,7 @@ const EditProfile = () => {
               gap: 6,
             }}
           >
-            <Text>Username</Text>
+            <Text style={{ fontWeight: 600 }}>Username</Text>
             <TextInput
               style={{
                 width: "100%",
@@ -195,7 +250,13 @@ const EditProfile = () => {
         </View>
 
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Update Profile</Text>
+          {updateLoading ? (
+            <ActivityIndicator color={"white"} />
+          ) : (
+            <Text style={styles.buttonText} onPress={handleUpdateProfile}>
+              Update Profile
+            </Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>

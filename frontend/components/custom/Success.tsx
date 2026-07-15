@@ -12,9 +12,11 @@ import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 const Success = ({
   title,
   description,
+  setProfileUpdateComplete,
 }: {
   title: string;
   description: string;
+  setProfileUpdateComplete: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { hydrate, token } = useAuth();
   const { reset } = useSignUp();
@@ -51,7 +53,10 @@ const Success = ({
         >
           <Text
             style={styles.buttonText}
-            onPress={() => router.replace("/settings")}
+            onPress={() => {
+              router.replace("/settings");
+              setProfileUpdateComplete(false);
+            }}
           >
             OK
           </Text>

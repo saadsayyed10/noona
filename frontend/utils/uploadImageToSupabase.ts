@@ -1,7 +1,11 @@
 import { supabaseClient } from "@/lib/supabase";
 
-export const handleImageUpload = async (file: File, bucketName: string) => {
-  const fileName = `${Date.now()}-${file.name}`;
+export const handleImageUpload = async (
+  file: Blob,
+  fileNameHint: string,
+  bucketName: string,
+) => {
+  const fileName = `${Date.now()}-${fileNameHint}`;
 
   const { error } = await supabaseClient.storage
     .from(bucketName)
