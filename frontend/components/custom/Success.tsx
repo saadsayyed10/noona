@@ -1,22 +1,17 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useSignUp } from "@/hooks/useSignUp";
-import {
-  ExternalPathString,
-  RelativePathString,
-  router,
-  useRouter,
-} from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const Success = ({
   title,
   description,
-  setProfileUpdateComplete,
+  setTrigger,
 }: {
   title: string;
   description: string;
-  setProfileUpdateComplete: React.Dispatch<React.SetStateAction<boolean>>;
+  setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { hydrate, token } = useAuth();
   const { reset } = useSignUp();
@@ -55,7 +50,7 @@ const Success = ({
             style={styles.buttonText}
             onPress={() => {
               router.replace("/settings");
-              setProfileUpdateComplete(false);
+              setTrigger(false);
             }}
           >
             OK

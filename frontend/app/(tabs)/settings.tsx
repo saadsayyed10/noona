@@ -1,4 +1,5 @@
-import { fetchUserProfileAPI } from "@/api/user.api";
+import { deleteUserProfileAPI, fetchUserProfileAPI } from "@/api/user.api";
+import Success from "@/components/custom/Success";
 import { useAuth } from "@/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -34,6 +35,8 @@ const Settings = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  const [deleteSuccessFlag, setDeleteSuccessFlag] = useState(false);
 
   const handleFetchProfile = async () => {
     setLoading(true);
@@ -87,8 +90,14 @@ const Settings = () => {
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => {
-            // TODO: call delete account API
+          onPress: async () => {
+            await deleteUserProfileAPI(token!)
+              .then(() => {
+                setDeleteSuccessFlag(true);
+              })
+              .catch((err) => {
+                alert(err.response.data.error);
+              });
           },
         },
       ],
@@ -117,6 +126,16 @@ const Settings = () => {
       ],
     );
   };
+
+  if (deleteSuccessFlag) {
+    return (
+      <Success
+        title="Account Deleted!"
+        description="We are sorry to let you go, hope we meet soon."
+        setTrigger={setDeleteSuccessFlag}
+      />
+    );
+  }
 
   return (
     <ScrollView

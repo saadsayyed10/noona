@@ -134,7 +134,7 @@ const EditProfile = () => {
       <Success
         title="Account Updated!"
         description="Your profile has been successfully updated."
-        setProfileUpdateComplete={setProfileUpdateComplete}
+        setTrigger={setProfileUpdateComplete}
       />
     );
   }
