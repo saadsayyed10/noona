@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { generateToken } from "../../lib/token";
 import prisma from "../../lib/orm";
+import { redisClient } from "../../config/redis.config";
 
 export const registerUserService = async (
   name: string,
@@ -86,7 +87,19 @@ export const fetchUserProfileService = async (userId: string) => {
 };
 
 export const fetchAllUsersService = async () => {
-  return await prisma.users.findMany({
+  const cacheKey = "user:all";
+
+  const cachedUsers = await redisClient.get(cacheKey);
+
+  if (cachedUsers) {
+    console.log("Cache Hit");
+
+    return JSON.parse(cachedUsers);
+  }
+
+  console.log("Cache Miss");
+
+  const users = await prisma.users.findMany({
     select: {
       id: true,
       name: true,
@@ -94,6 +107,12 @@ export const fetchAllUsersService = async () => {
       profilePicUrl: true,
     },
   });
+
+  await redisClient.set(cacheKey, JSON.stringify(users), {
+    EX: 300,
+  });
+
+  return users;
 };
 
 export const updateUserProfileService = async (
