@@ -28,3 +28,29 @@ export const inviteFriendController = async (req: Request, res: Response) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+export const fetchAllInvitesController = async (
+  req: Request,
+  res: Response,
+) => {
+  let errorMessage;
+  try {
+    if (!(req as any).user) {
+      errorMessage = "Unauthorized: Please login to fetch all invitations";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const { status } = req.query;
+
+    const invitations = await invitationServices.fetchAllInvitesService(
+      (req as any).user.id,
+      status as "sent" | "receive",
+    );
+
+    res.status(200).json({ total: invitations.length, invitations });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(400).json({ error: error.message });
+  }
+};

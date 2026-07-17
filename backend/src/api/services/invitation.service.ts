@@ -24,3 +24,52 @@ export const inviteFriendService = async (
 
   return invite;
 };
+
+export const fetchAllInvitesService = async (
+  userId: string,
+  status: "sent" | "receive",
+) => {
+  if (status === "sent") {
+    return await prisma.users.findMany({
+      where: {
+        id: userId,
+      },
+      select: {
+        sentInvitations: {
+          select: {
+            receiver: {
+              select: {
+                id: true,
+                name: true,
+                username: true,
+                profilePicUrl: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  } else if (status === "receive") {
+    return await prisma.users.findMany({
+      where: {
+        id: userId,
+      },
+      select: {
+        recieveInvitations: {
+          select: {
+            sender: {
+              select: {
+                id: true,
+                name: true,
+                username: true,
+                profilePicUrl: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  return await prisma.invitations.findMany({});
+};

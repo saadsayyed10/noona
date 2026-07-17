@@ -9,5 +9,10 @@ invitationRouter.post(
   protectAuth,
   controllers.inviteFriendController,
 );
+invitationRouter.get(
+  "/all",
+  protectAuth,
+  controllers.fetchAllInvitesController,
+);
 
 export default invitationRouter;
