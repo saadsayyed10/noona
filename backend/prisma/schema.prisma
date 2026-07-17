@@ -19,6 +19,22 @@ model users {
   createdAt     DateTime @default(now())
 
   ratings ratings[]
+
+  sentInvitations    invitations[] @relation("InvitationSender")
+  recieveInvitations invitations[] @relation("InvitationReceiver")
+}
+
+model invitations {
+  id         String   @id @default(uuid())
+  status     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  senderId   String
+  receiverId String
+
+  sender   users @relation("InvitationSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver users @relation("InvitationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, receiverId])
 }
 
 model ratings {
