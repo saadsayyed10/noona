@@ -31,8 +31,8 @@ model invitations {
   senderId   String
   receiverId String
 
-  sender   users @relation("InvitationSender", fields: [senderId], references: [id])
-  receiver users @relation("InvitationReceiver", fields: [receiverId], references: [id])
+  sender   users @relation("InvitationSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver users @relation("InvitationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
 
   @@unique([senderId, receiverId])
 }
