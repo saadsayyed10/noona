@@ -19,6 +19,20 @@ model users {
   createdAt     DateTime @default(now())
 
   ratings ratings[]
+
+  sentInvitations    invitations[] @relation("InvitationSender")
+  recieveInvitations invitations[] @relation("InvitationReceiver")
+}
+
+model invitations {
+  id         String   @id
+  status     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  senderId   String
+  receiverId String
+
+  sender   users @relation("InvitationSender", fields: [senderId], references: [id])
+  receiver users @relation("InvitationReceiver", fields: [receiverId], references: [id])
 }
 
 model ratings {
