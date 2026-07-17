@@ -14,5 +14,10 @@ invitationRouter.get(
   protectAuth,
   controllers.fetchAllInvitesController,
 );
+invitationRouter.put(
+  "/accept/:inviteId",
+  protectAuth,
+  controllers.acceptInviteController,
+);
 
 export default invitationRouter;

@@ -38,6 +38,7 @@ export const fetchAllInvitesService = async (
         sentInvitations: {
           select: {
             receiver: {
+              id: true,
               select: {
                 id: true,
                 name: true,
@@ -57,6 +58,7 @@ export const fetchAllInvitesService = async (
       select: {
         recieveInvitations: {
           select: {
+            id: true,
             sender: {
               select: {
                 id: true,
@@ -72,4 +74,42 @@ export const fetchAllInvitesService = async (
   }
 
   return await prisma.invitations.findMany({});
+};
+
+export const acceptInviteService = async (inviteId: string, userId: string) => {
+  const invitation = await prisma.invitations.update({
+    where: {
+      id: inviteId,
+      status: false,
+    },
+    data: {
+      status: true,
+    },
+  });
+
+  await prisma.$transaction([
+    prisma.users.update({
+      where: {
+        id: invitation.receiverId,
+      },
+      data: {
+        friends: {
+          push: invitation.senderId,
+        },
+      },
+    }),
+
+    prisma.users.update({
+      where: {
+        id: invitation.senderId,
+      },
+      data: {
+        friends: {
+          push: invitation.receiverId,
+        },
+      },
+    }),
+  ]);
+
+  return "Invitation accepted";
 };

@@ -54,3 +54,31 @@ export const fetchAllInvitesController = async (
     return res.status(400).json({ error: error.message });
   }
 };
+
+export const acceptInviteController = async (req: Request, res: Response) => {
+  let errorMessage;
+  try {
+    if (!(req as any).user) {
+      errorMessage = "Unauthorized: Please login to accept invitation";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const { inviteId } = req.params;
+    if (!inviteId) {
+      errorMessage = "Invite ID not found in params";
+      console.log(errorMessage);
+      return res.status(404).json({ error: errorMessage });
+    }
+
+    const invite = await invitationServices.acceptInviteService(
+      inviteId as string,
+      (req as any).user.id,
+    );
+
+    res.status(200).json({ invite });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};
