@@ -19,5 +19,10 @@ invitationRouter.put(
   protectAuth,
   controllers.acceptInviteController,
 );
+invitationRouter.delete(
+  "/reject/:inviteId",
+  protectAuth,
+  controllers.rejectInviteController,
+);
 
 export default invitationRouter;

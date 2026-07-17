@@ -82,3 +82,28 @@ export const acceptInviteController = async (req: Request, res: Response) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+export const rejectInviteController = async (req: Request, res: Response) => {
+  let errorMessage;
+  try {
+    if (!(req as any).user) {
+      errorMessage = "Unauthorized: Please login to reject invitation";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const { inviteId } = req.params;
+    if (!inviteId) {
+      errorMessage = "Invite ID not found in params";
+      console.log(errorMessage);
+      return res.status(404).json({ error: errorMessage });
+    }
+
+    await invitationServices.rejectInviteService(inviteId as string);
+
+    res.status(204).json({ message: "Invitation rejected" });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};

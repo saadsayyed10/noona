@@ -38,7 +38,6 @@ export const fetchAllInvitesService = async (
         sentInvitations: {
           select: {
             receiver: {
-              id: true,
               select: {
                 id: true,
                 name: true,
@@ -112,4 +111,12 @@ export const acceptInviteService = async (inviteId: string, userId: string) => {
   ]);
 
   return "Invitation accepted";
+};
+
+export const rejectInviteService = async (inviteId: string) => {
+  return await prisma.invitations.delete({
+    where: {
+      id: inviteId,
+    },
+  });
 };
