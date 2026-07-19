@@ -31,7 +31,7 @@ export const fetchUserProfileAPI = async (token: string, userId: string) => {
 };
 
 export const fetchAllUsersAPI = async (token: string) => {
-  return await axios.get(`${apiUrl}/user/all`, {
+  return await axios.get(`${apiUrl}/user/profile/all`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
