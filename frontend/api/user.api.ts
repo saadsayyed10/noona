@@ -30,6 +30,14 @@ export const fetchUserProfileAPI = async (token: string, userId: string) => {
   });
 };
 
+export const fetchAllUsersAPI = async (token: string) => {
+  return await axios.get(`${apiUrl}/user/all`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export const updateUserProfileAPI = async (
   name: string,
   username: string,
