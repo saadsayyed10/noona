@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { ChevronLeft, Search, Users } from "lucide-react-native";
+import { ChevronLeft, Search } from "lucide-react-native";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -11,7 +11,14 @@ import {
   View,
 } from "react-native";
 
-export default function Chat() {
+interface FetchAllUsers {
+  id: string;
+  name: string;
+  username: string;
+  profilePicUrl: string;
+}
+
+export default function FindUsers() {
   const router = useRouter();
 
   return (
@@ -43,19 +50,22 @@ export default function Chat() {
             <ChevronLeft size={32} />
           </TouchableOpacity>
           <Text style={{ fontSize: 20, fontWeight: "700", color: "#1c1c1e" }}>
-            Chingudeul (Friends)
+            Find Chingudeul
           </Text>
-          <Users onPress={() => router.push("/(users)/findusers")} size={28} />
+          <View />
         </View>
 
         <View style={styles.inputWrapper}>
           <Search size={20} color="#939292" style={styles.icon} />
-          <TextInput placeholder="Search friends..." style={styles.input} />
+          <TextInput
+            placeholder="Search to add new friends..."
+            style={styles.input}
+          />
         </View>
 
         {Array.from({ length: 100 }).map((_, i) => (
           <Text key={i} style={{ paddingVertical: 12 }}>
-            Chat {i}
+            Friend {i + 1}
           </Text>
         ))}
       </ScrollView>
