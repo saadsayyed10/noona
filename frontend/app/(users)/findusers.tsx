@@ -1,3 +1,4 @@
+import { sentInvitationAPI } from "@/api/invite.api";
 import { fetchAllUsersAPI } from "@/api/user.api";
 import ChatSkeleton from "@/components/custom/ChatSkeleton";
 import { useAuth } from "@/hooks/useAuth";
@@ -31,6 +32,7 @@ export default function FindUsers() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+  const [sendInviteLoading, setSendInviteLoading] = useState(false);
 
   const filteredUsers = users.filter(
     (user) =>
@@ -53,6 +55,23 @@ export default function FindUsers() {
       console.log(error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSentInvitation = async (guestId: string) => {
+    setSendInviteLoading(true);
+    try {
+      await sentInvitationAPI(guestId, token!)
+        .then((res) => {
+          alert(res.data.message);
+        })
+        .catch((err) => {
+          alert(err.response.data.error);
+        });
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setSendInviteLoading(false);
     }
   };
 
@@ -89,7 +108,7 @@ export default function FindUsers() {
             <ChevronLeft size={32} />
           </TouchableOpacity>
           <Text style={{ fontSize: 20, fontWeight: "700", color: "#1c1c1e" }}>
-            Find Chingudeul
+            Find People
           </Text>
           <View />
         </View>
@@ -168,7 +187,10 @@ export default function FindUsers() {
                   flexDirection: "row",
                 }}
               >
-                <TouchableOpacity>
+                <TouchableOpacity
+                  disabled={sendInviteLoading}
+                  onPress={() => handleSentInvitation(user.id)}
+                >
                   <UserRoundPlus color={"#AC97CA"} />
                 </TouchableOpacity>
               </View>
