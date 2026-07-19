@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import { ChevronLeft, Search } from "lucide-react-native";
+import { useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -20,6 +21,8 @@ interface FetchAllUsers {
 
 export default function FindUsers() {
   const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
 
   return (
     <KeyboardAvoidingView
@@ -63,10 +66,87 @@ export default function FindUsers() {
           />
         </View>
 
-        {Array.from({ length: 100 }).map((_, i) => (
-          <Text key={i} style={{ paddingVertical: 12 }}>
-            Friend {i + 1}
-          </Text>
+        {Array.from({ length: 8 }).map((_, i) => (
+          <View
+            key={i}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              flexDirection: "row",
+              padding: 10,
+            }}
+          >
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                gap: 20,
+                flexDirection: "row",
+              }}
+            >
+              <View
+                style={{
+                  width: 60,
+                  height: 60,
+                  backgroundColor: "#F7F7F7",
+                  borderRadius: "100%",
+                }}
+              />
+              <View
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                  gap: 6,
+                }}
+              >
+                <View
+                  style={{
+                    width: 100,
+                    height: 10,
+                    backgroundColor: "#F7F7F7",
+                  }}
+                />
+                <View
+                  style={{
+                    width: 60,
+                    height: 10,
+                    backgroundColor: "#F7F7F7",
+                  }}
+                />
+              </View>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "flex-end",
+                gap: 8,
+                flexDirection: "row",
+              }}
+            >
+              <View
+                style={{
+                  width: 40,
+                  height: 40,
+                  backgroundColor: "#F7F7F7",
+                  borderRadius: "100%",
+                }}
+              />
+              <View
+                style={{
+                  width: 40,
+                  height: 40,
+                  backgroundColor: "#F7F7F7",
+                  borderRadius: "100%",
+                }}
+              />
+            </View>
+          </View>
         ))}
       </ScrollView>
     </KeyboardAvoidingView>
@@ -92,9 +172,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#D1D5DB",
-    backgroundColor: "#F0F3F7",
+    backgroundColor: "#f0f0f0",
     borderRadius: 10,
     paddingHorizontal: 16,
+    marginBottom: 20,
   },
 
   icon: {
