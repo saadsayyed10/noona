@@ -1,3 +1,4 @@
+import ChatSkeleton from "@/components/custom/ChatSkeleton";
 import { useRouter } from "expo-router";
 import { ChevronLeft, Search } from "lucide-react-native";
 import { useState } from "react";
@@ -66,88 +67,7 @@ export default function FindUsers() {
           />
         </View>
 
-        {Array.from({ length: 8 }).map((_, i) => (
-          <View
-            key={i}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-              flexDirection: "row",
-              padding: 10,
-            }}
-          >
-            <View
-              style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                gap: 20,
-                flexDirection: "row",
-              }}
-            >
-              <View
-                style={{
-                  width: 60,
-                  height: 60,
-                  backgroundColor: "#F7F7F7",
-                  borderRadius: "100%",
-                }}
-              />
-              <View
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "flex-start",
-                  flexDirection: "column",
-                  gap: 6,
-                }}
-              >
-                <View
-                  style={{
-                    width: 100,
-                    height: 10,
-                    backgroundColor: "#F7F7F7",
-                  }}
-                />
-                <View
-                  style={{
-                    width: 60,
-                    height: 10,
-                    backgroundColor: "#F7F7F7",
-                  }}
-                />
-              </View>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "flex-end",
-                gap: 8,
-                flexDirection: "row",
-              }}
-            >
-              <View
-                style={{
-                  width: 40,
-                  height: 40,
-                  backgroundColor: "#F7F7F7",
-                  borderRadius: "100%",
-                }}
-              />
-              <View
-                style={{
-                  width: 40,
-                  height: 40,
-                  backgroundColor: "#F7F7F7",
-                  borderRadius: "100%",
-                }}
-              />
-            </View>
-          </View>
-        ))}
+        <ChatSkeleton />
       </ScrollView>
     </KeyboardAvoidingView>
   );
