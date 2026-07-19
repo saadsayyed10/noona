@@ -25,10 +25,18 @@ interface FetchAllUsers {
 
 export default function FindUsers() {
   const [users, setUsers] = useState<FetchAllUsers[]>([]);
-  const { token } = useAuth();
+  const [searchInput, setSearchInput] = useState("");
 
+  const { token } = useAuth();
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
+
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchInput.toLocaleLowerCase()) ||
+      user.username.toLowerCase().includes(searchInput.toLocaleLowerCase()),
+  );
 
   const handleFetchAllUsers = async () => {
     setLoading(true);
@@ -91,15 +99,27 @@ export default function FindUsers() {
           <TextInput
             placeholder="Search to add new friends..."
             style={styles.input}
+            value={searchInput}
+            onChangeText={setSearchInput}
           />
         </View>
 
         {loading ? (
           <ChatSkeleton />
-        ) : users.length < 1 ? (
-          <Text>No users found</Text>
+        ) : filteredUsers.length < 1 ? (
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <Text>No users found</Text>
+          </View>
         ) : (
-          users.map((user) => (
+          filteredUsers.map((user) => (
             <View
               key={user.id}
               style={{
