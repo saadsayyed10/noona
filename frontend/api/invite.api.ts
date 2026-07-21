@@ -12,3 +12,17 @@ export const sentInvitationAPI = async (guestId: string, token: string) => {
     },
   );
 };
+
+export const fetchAllInvitesAPI = async (
+  status: "sent" | "receive",
+  token: string,
+) => {
+  return await axios.get(`${apiUrl}/invite/all`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      status,
+    },
+  });
+};
