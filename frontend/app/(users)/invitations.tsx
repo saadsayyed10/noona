@@ -1,82 +1,70 @@
-import { sentInvitationAPI } from "@/api/invite.api";
-import { fetchAllUsersAPI } from "@/api/user.api";
+import { fetchAllInvitesAPI } from "@/api/invite.api";
 import ChatSkeleton from "@/components/custom/ChatSkeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "expo-router";
-import { ChevronLeft, Search, Send, UserRoundPlus } from "lucide-react-native";
+import { Check, ChevronLeft, Search, Send, X } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
-  Image,
+  View,
+  Text,
+  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
   TouchableOpacity,
-  View,
+  TextInput,
+  Image,
 } from "react-native";
 
-interface FetchAllUsers {
+interface FetchAllInvitations {
   id: string;
-  name: string;
-  username: string;
-  profilePicUrl: string;
+  sender: {
+    name: string;
+    username: string;
+    profilePicUrl: string;
+  };
 }
 
-export default function Invitations() {
-  const [users, setUsers] = useState<FetchAllUsers[]>([]);
-  const [searchInput, setSearchInput] = useState("");
-
+const Invitations = () => {
+  const [invitations, setInvitations] = useState<FetchAllInvitations[]>([]);
+  const [status, setStatus] = useState<"sent" | "receive">("receive");
   const { token } = useAuth();
-  const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const [sendInviteLoading, setSendInviteLoading] = useState(false);
+  const router = useRouter();
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchInput.toLocaleLowerCase()) ||
-      user.username.toLowerCase().includes(searchInput.toLocaleLowerCase()),
-  );
-
-  const handleFetchAllUsers = async () => {
+  const handleFetchAllInvites = async () => {
     setLoading(true);
     try {
-      await fetchAllUsersAPI(token!)
-        .then((res) => {
-          console.log(res.data.users);
-          setUsers(res.data.users);
-        })
-        .catch((err) => {
-          alert(err.response.data.error);
-        });
+      if (status === "receive") {
+        await fetchAllInvitesAPI(status, token!)
+          .then((res) => {
+            console.log(JSON.stringify(res.data.invitations));
+            setInvitations(res.data.invitations[0].recieveInvitations);
+          })
+          .catch((err) => {
+            alert(err.response.data.error);
+          });
+      } else {
+        await fetchAllInvitesAPI(status, token!)
+          .then((res) => {
+            console.log(JSON.stringify(res.data.invitations));
+            setInvitations(res.data.invitations[0].sentInvitations);
+          })
+          .catch((err) => {
+            alert(err.response.data.error);
+          });
+      }
     } catch (error: any) {
-      console.log(error.message);
+      console.log(error);
+      alert(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSentInvitation = async (guestId: string) => {
-    setSendInviteLoading(true);
-    try {
-      await sentInvitationAPI(guestId, token!)
-        .then((res) => {
-          alert(res.data.message);
-        })
-        .catch((err) => {
-          alert(err.response.data.error);
-        });
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      setSendInviteLoading(false);
-    }
-  };
-
   useEffect(() => {
-    handleFetchAllUsers();
+    handleFetchAllInvites();
   }, [token]);
 
   return (
@@ -101,7 +89,7 @@ export default function Invitations() {
             width: "100%",
             flexDirection: "row",
             marginTop: 40,
-            marginBottom: 10,
+            marginBottom: 20,
           }}
         >
           <TouchableOpacity onPress={() => router.back()}>
@@ -115,19 +103,9 @@ export default function Invitations() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.inputWrapper}>
-          <Search size={20} color="#939292" style={styles.icon} />
-          <TextInput
-            placeholder="Search user..."
-            style={styles.input}
-            value={searchInput}
-            onChangeText={setSearchInput}
-          />
-        </View>
-
         {loading ? (
           <ChatSkeleton />
-        ) : filteredUsers.length < 1 ? (
+        ) : invitations.length < 1 ? (
           <View
             style={{
               display: "flex",
@@ -140,7 +118,7 @@ export default function Invitations() {
             <Text>No users found</Text>
           </View>
         ) : (
-          filteredUsers.map((user) => (
+          invitations.map((user) => (
             <View
               key={user.id}
               style={{
@@ -162,7 +140,7 @@ export default function Invitations() {
                 }}
               >
                 <Image
-                  source={{ uri: user.profilePicUrl }}
+                  source={{ uri: user.sender.profilePicUrl }}
                   style={{ width: 60, height: 60, borderRadius: "100%" }}
                 />
                 <View
@@ -174,9 +152,9 @@ export default function Invitations() {
                     gap: 2,
                   }}
                 >
-                  <Text style={{ fontWeight: 600 }}>{user.name}</Text>
+                  <Text style={{ fontWeight: 600 }}>{user.sender.name}</Text>
                   <Text style={{ fontSize: 11, color: "#929292" }}>
-                    @{user.username}
+                    @{user.sender.username}
                   </Text>
                 </View>
               </View>
@@ -189,12 +167,22 @@ export default function Invitations() {
                   flexDirection: "row",
                 }}
               >
-                <TouchableOpacity
-                  disabled={sendInviteLoading}
-                  onPress={() => handleSentInvitation(user.id)}
+                <View
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                    flexDirection: "row",
+                    gap: 10,
+                  }}
                 >
-                  <UserRoundPlus color={"#AC97CA"} />
-                </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Check color={"#AC97CA"} />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <X color={"#AC97CA"} />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           ))
@@ -202,7 +190,7 @@ export default function Invitations() {
       </ScrollView>
     </KeyboardAvoidingView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -252,3 +240,5 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
 });
+
+export default Invitations;
