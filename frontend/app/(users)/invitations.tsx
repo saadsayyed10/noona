@@ -2,7 +2,14 @@ import { fetchAllInvitesAPI } from "@/api/invite.api";
 import ChatSkeleton from "@/components/custom/ChatSkeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "expo-router";
-import { Check, ChevronLeft, Search, Send, X } from "lucide-react-native";
+import {
+  Check,
+  ChevronLeft,
+  ClockFading,
+  Search,
+  Send,
+  X,
+} from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -12,7 +19,6 @@ import {
   Platform,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   Image,
 } from "react-native";
 
@@ -65,7 +71,7 @@ const Invitations = () => {
 
   useEffect(() => {
     handleFetchAllInvites();
-  }, [token]);
+  }, [token, status]);
 
   return (
     <KeyboardAvoidingView
@@ -96,11 +102,17 @@ const Invitations = () => {
             <ChevronLeft size={32} />
           </TouchableOpacity>
           <Text style={{ fontSize: 20, fontWeight: "700", color: "#1c1c1e" }}>
-            Pending Requests
+            {status === "sent" ? "Sent Requests" : "Pending Requests"}
           </Text>
-          <TouchableOpacity>
-            <Send />
-          </TouchableOpacity>
+          {status === "sent" ? (
+            <TouchableOpacity onPress={() => setStatus("receive")}>
+              <ClockFading />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => setStatus("sent")}>
+              <Send />
+            </TouchableOpacity>
+          )}
         </View>
 
         {loading ? (
@@ -115,7 +127,7 @@ const Invitations = () => {
               height: "100%",
             }}
           >
-            <Text>No users found</Text>
+            <Text>No requests found</Text>
           </View>
         ) : (
           invitations.map((user) => (
