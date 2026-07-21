@@ -2,14 +2,7 @@ import { fetchAllInvitesAPI } from "@/api/invite.api";
 import ChatSkeleton from "@/components/custom/ChatSkeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "expo-router";
-import {
-  Check,
-  ChevronLeft,
-  ClockFading,
-  Search,
-  Send,
-  X,
-} from "lucide-react-native";
+import { Check, ChevronLeft, Search, Send, X } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -19,6 +12,7 @@ import {
   Platform,
   ScrollView,
   TouchableOpacity,
+  TextInput,
   Image,
 } from "react-native";
 
@@ -33,7 +27,7 @@ interface FetchAllInvitations {
 
 const Invitations = () => {
   const [invitations, setInvitations] = useState<FetchAllInvitations[]>([]);
-  const [status, setStatus] = useState<"sent" | "receive">("receive");
+  const [status, _setStatus] = useState<"sent" | "receive">("receive");
   const { token } = useAuth();
 
   const [loading, setLoading] = useState(false);
@@ -42,25 +36,14 @@ const Invitations = () => {
   const handleFetchAllInvites = async () => {
     setLoading(true);
     try {
-      if (status === "receive") {
-        await fetchAllInvitesAPI(status, token!)
-          .then((res) => {
-            console.log(JSON.stringify(res.data.invitations));
-            setInvitations(res.data.invitations[0].recieveInvitations);
-          })
-          .catch((err) => {
-            alert(err.response.data.error);
-          });
-      } else {
-        await fetchAllInvitesAPI(status, token!)
-          .then((res) => {
-            console.log(JSON.stringify(res.data.invitations));
-            setInvitations(res.data.invitations[0].sentInvitations);
-          })
-          .catch((err) => {
-            alert(err.response.data.error);
-          });
-      }
+      await fetchAllInvitesAPI(status, token!)
+        .then((res) => {
+          console.log(JSON.stringify(res.data.invitations));
+          setInvitations(res.data.invitations[0].recieveInvitations);
+        })
+        .catch((err) => {
+          alert(err.response.data.error);
+        });
     } catch (error: any) {
       console.log(error);
       alert(error.message);
@@ -71,7 +54,7 @@ const Invitations = () => {
 
   useEffect(() => {
     handleFetchAllInvites();
-  }, [token, status]);
+  }, [token]);
 
   return (
     <KeyboardAvoidingView
@@ -102,17 +85,11 @@ const Invitations = () => {
             <ChevronLeft size={32} />
           </TouchableOpacity>
           <Text style={{ fontSize: 20, fontWeight: "700", color: "#1c1c1e" }}>
-            {status === "sent" ? "Sent Requests" : "Pending Requests"}
+            Pending Requests
           </Text>
-          {status === "sent" ? (
-            <TouchableOpacity onPress={() => setStatus("receive")}>
-              <ClockFading />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={() => setStatus("sent")}>
-              <Send />
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity>
+            <Send />
+          </TouchableOpacity>
         </View>
 
         {loading ? (
@@ -127,7 +104,7 @@ const Invitations = () => {
               height: "100%",
             }}
           >
-            <Text>No requests found</Text>
+            <Text>No users found</Text>
           </View>
         ) : (
           invitations.map((user) => (
