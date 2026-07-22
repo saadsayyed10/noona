@@ -196,6 +196,11 @@ const Settings = () => {
         />
         <SettingsItem icon="lock-closed-outline" label="Change Password" />
         <SettingsItem icon="people-outline" label="Chingudeul (Friends)" />
+        <SettingsItem
+          icon="mail-unread-outline"
+          label="Invitations"
+          onPress={() => router.replace("/(users)/invitations")}
+        />
         <SettingsItem icon="star-outline" label="Rate the App" />
         <SettingsItem icon="help-circle-outline" label="Help & Support" />
         <SettingsItem icon="shield-checkmark-outline" label="Privacy Policy" />

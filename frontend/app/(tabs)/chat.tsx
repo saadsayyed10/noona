@@ -1,21 +1,111 @@
-import { StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { ChevronLeft, Search, Users } from "lucide-react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-const Chat = () => {
+export default function Chat() {
+  const router = useRouter();
+
   return (
-    <View style={styles.main}>
-      <Text>Chat</Text>
-    </View>
-  );
-};
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScrollView
+        style={{ flex: 1, backgroundColor: "#fff" }}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingTop: 20,
+          paddingBottom: 30,
+        }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+            flexDirection: "row",
+            marginTop: 40,
+            marginBottom: 10,
+          }}
+        >
+          <TouchableOpacity onPress={() => router.back()}>
+            <ChevronLeft size={32} />
+          </TouchableOpacity>
+          <Text style={{ fontSize: 20, fontWeight: "700", color: "#1c1c1e" }}>
+            Chingudeul (Friends)
+          </Text>
+          <Users onPress={() => router.push("/(users)/findusers")} size={28} />
+        </View>
 
-export default Chat;
+        <View style={styles.inputWrapper}>
+          <Search size={20} color="#939292" style={styles.icon} />
+          <TextInput placeholder="Search friends..." style={styles.input} />
+        </View>
+
+        {Array.from({ length: 100 }).map((_, i) => (
+          <Text key={i} style={{ paddingVertical: 12 }}>
+            Chat {i}
+          </Text>
+        ))}
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+}
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+
   main: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
     backgroundColor: "#FFFFFF",
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    gap: 16,
+  },
+
+  inputWrapper: {
+    height: 50,
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#D1D5DB",
+    backgroundColor: "#F0F3F7",
+    borderRadius: 10,
+    paddingHorizontal: 16,
+  },
+
+  icon: {
+    marginRight: 10,
+  },
+
+  input: {
+    flex: 1,
+    fontSize: 16,
+  },
+
+  scrollView: {
+    flex: 1,
+  },
+
+  scrollContent: {
+    paddingBottom: 30,
+  },
+
+  chatText: {
+    fontSize: 18,
+    paddingVertical: 10,
   },
 });
