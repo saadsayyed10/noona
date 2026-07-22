@@ -123,12 +123,6 @@ const Invitations = () => {
             onRefresh={onRefresh}
             tintColor={"#9d73d8"}
             colors={["#9d73d8"]}
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-            }}
           />
         }
       >
