@@ -1,4 +1,8 @@
-import { acceptInviteAPI, fetchAllInvitesAPI } from "@/api/invite.api";
+import {
+  acceptInviteAPI,
+  fetchAllInvitesAPI,
+  rejectInviteAPI,
+} from "@/api/invite.api";
 import ChatSkeleton from "@/components/custom/ChatSkeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "expo-router";
@@ -59,6 +63,25 @@ const Invitations = () => {
         .then((res) => {
           console.log(res.data);
           alert("Invitation accepted");
+          rejectInviteAPI(inviteId, token!);
+          handleFetchAllInvites();
+        })
+        .catch((err) => {
+          console.log(err.response?.data?.error);
+          alert(err.response?.data?.error);
+        });
+    } catch (error: any) {
+      console.log(error);
+      alert(error.message);
+    }
+  };
+
+  const handleRejectInvitation = async (inviteId: string) => {
+    try {
+      await rejectInviteAPI(inviteId, token!)
+        .then((res) => {
+          console.log(res.data);
+          alert("Invitation rejected");
           handleFetchAllInvites();
         })
         .catch((err) => {
@@ -214,7 +237,9 @@ const Invitations = () => {
                   >
                     <Check color={"#AC97CA"} />
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleRejectInvitation(user.id)}
+                  >
                     <X color={"#AC97CA"} />
                   </TouchableOpacity>
                 </View>
