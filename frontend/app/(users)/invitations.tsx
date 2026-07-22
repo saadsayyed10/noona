@@ -1,4 +1,4 @@
-import { fetchAllInvitesAPI } from "@/api/invite.api";
+import { acceptInviteAPI, fetchAllInvitesAPI } from "@/api/invite.api";
 import ChatSkeleton from "@/components/custom/ChatSkeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "expo-router";
@@ -13,6 +13,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  RefreshControl,
 } from "react-native";
 
 interface FetchAllInvitations {
@@ -30,6 +31,7 @@ const Invitations = () => {
   const { token } = useAuth();
 
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const router = useRouter();
 
   const handleFetchAllInvites = async () => {
@@ -51,6 +53,30 @@ const Invitations = () => {
     }
   };
 
+  const handleAcceptInvitation = async (inviteId: string) => {
+    try {
+      await acceptInviteAPI(inviteId, token!)
+        .then((res) => {
+          console.log(res.data);
+          alert("Invitation accepted");
+          handleFetchAllInvites();
+        })
+        .catch((err) => {
+          console.log(err.response?.data?.error);
+          alert(err.response?.data?.error);
+        });
+    } catch (error: any) {
+      console.log(error);
+      alert(error.message);
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await handleFetchAllInvites();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     handleFetchAllInvites();
   }, [token]);
@@ -68,6 +94,20 @@ const Invitations = () => {
           paddingBottom: 30,
         }}
         keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={"#9d73d8"}
+            colors={["#9d73d8"]}
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+            }}
+          />
+        }
       >
         <View
           style={{
@@ -80,7 +120,7 @@ const Invitations = () => {
             marginBottom: 20,
           }}
         >
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => router.replace("/(tabs)/home")}>
             <ChevronLeft size={32} />
           </TouchableOpacity>
           <Text
@@ -108,7 +148,7 @@ const Invitations = () => {
               height: "100%",
             }}
           >
-            <Text>No users found</Text>
+            <Text>No requests found</Text>
           </View>
         ) : (
           invitations.map((user) => (
@@ -169,7 +209,9 @@ const Invitations = () => {
                     gap: 10,
                   }}
                 >
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleAcceptInvitation(user.id)}
+                  >
                     <Check color={"#AC97CA"} />
                   </TouchableOpacity>
                   <TouchableOpacity>
