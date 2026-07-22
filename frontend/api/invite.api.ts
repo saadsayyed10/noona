@@ -38,3 +38,11 @@ export const acceptInviteAPI = async (inviteId: string, token: string) => {
     },
   );
 };
+
+export const rejectInviteAPI = async (inviteId: string, token: string) => {
+  return await axios.delete(`${apiUrl}/invite/reject/${inviteId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
