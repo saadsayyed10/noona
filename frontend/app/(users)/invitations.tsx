@@ -12,7 +12,6 @@ import {
   Platform,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   Image,
 } from "react-native";
 
@@ -84,12 +83,17 @@ const Invitations = () => {
           <TouchableOpacity onPress={() => router.back()}>
             <ChevronLeft size={32} />
           </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontWeight: "700", color: "#1c1c1e" }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "700",
+              color: "#1c1c1e",
+              marginRight: 20,
+            }}
+          >
             Pending Requests
           </Text>
-          <TouchableOpacity>
-            <Send />
-          </TouchableOpacity>
+          <View />
         </View>
 
         {loading ? (

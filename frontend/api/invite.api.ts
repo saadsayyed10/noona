@@ -26,3 +26,15 @@ export const fetchAllInvitesAPI = async (
     },
   });
 };
+
+export const acceptInviteAPI = async (inviteId: string, token: string) => {
+  return await axios.put(
+    `${apiUrl}/invite/accept/${inviteId}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+};
