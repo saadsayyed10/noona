@@ -41,7 +41,7 @@ export const registerUserService = async (
   });
 
   // Generate token for the particular user
-  const token = generateToken(user.id!);
+  const token = generateToken(user.id);
 
   return { token, user }; // Return token and user data
 };

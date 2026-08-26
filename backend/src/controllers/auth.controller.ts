@@ -42,7 +42,7 @@ export const registerUserController = async (req: Request, res: Response) => {
     );
 
     res.status(201).json({
-      message: `Dear ${user.name} thanks for creating the account, welcome to Noona.`,
+      message: `Dear ${user.name} thanks for creating the account, welcome to Noona`,
       token,
     });
   } catch (error: any) {
