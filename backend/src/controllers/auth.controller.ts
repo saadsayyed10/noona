@@ -10,7 +10,7 @@ import * as authServices from "../services/auth.service";
 let errorMessage;
 
 /*
-    Controller: To register user account
+    Controller: To create user account
     Method: POST
     Endpoint: /api/auth/sign-up
     Authorization: No    
