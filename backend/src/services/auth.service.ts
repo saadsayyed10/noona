@@ -45,3 +45,28 @@ export const registerUserService = async (
 
   return { token, user }; // Return token and user data
 };
+
+export const loginUserService = async (
+  usernameOrEmail: string,
+  password: string,
+) => {
+  const user = await prisma.users.findFirst({
+    where: {
+      OR: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+    },
+  });
+  // If user doesn't exist, don't allow logging in
+  if (!user) throw new Error("Your account does not exist in Noona");
+
+  // Verify and validate password
+  const isValidPassword = await bcrypt.compare(password, user.password);
+  if (!isValidPassword)
+    throw new Error(
+      "Password is incorrect, please type correct password or reset new password",
+    );
+
+  // Generate token for the particular user
+  const token = generateToken(user.id);
+
+  return { token, user }; // Return token and user data
+};
