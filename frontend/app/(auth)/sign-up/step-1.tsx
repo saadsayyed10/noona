@@ -10,10 +10,10 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { Mail, Lock } from "lucide-react-native";
+import { Mail, Lock, User } from "lucide-react-native";
 import { useRouter } from "expo-router";
 
-const SignIn = () => {
+const SignUpStep1 = () => {
   const router = useRouter();
 
   return (
@@ -23,14 +23,14 @@ const SignIn = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
-          contentContainerClassName="flex-grow justify-between items-center w-full py-16 px-8"
+          contentContainerClassName="flex-grow justify-between items-center w-full py-20 px-8"
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Logo */}
+          {/* Tracker and Logo */}
           <Image
-            source={require("../../assets/images/logos/Logo.png")}
-            className="w-72 h-72"
+            source={require("../../../assets/images/logos/Logo_No_Slogan.png")}
+            className="w-64 h-52"
           />
 
           {/* Input fields */}
@@ -38,12 +38,24 @@ const SignIn = () => {
             {/* Message */}
             <View className="flex justify-center items-center w-full gap-y-1">
               <Text className="text-4xl text-neutral-800 tracking-wide text-center w-full font-semibold">
-                Welcome back!
+                Create your account
               </Text>
 
               <Text className="text-base text-neutral-400 tracking-wide text-center w-full">
-                Login to continue
+                Step 1 of 3
               </Text>
+            </View>
+
+            {/* Name */}
+            <View className="flex justify-start items-center w-full flex-row gap-x-4 h-16 border border-neutral-500/40 rounded-lg px-4">
+              <User size={20} color="#404040" />
+
+              <TextInput
+                placeholder="Full Name"
+                className="flex-1"
+                keyboardType="default"
+                autoCapitalize="none"
+              />
             </View>
 
             {/* Email */}
@@ -57,28 +69,6 @@ const SignIn = () => {
                 autoCapitalize="none"
               />
             </View>
-
-            {/* Password */}
-            <View className="flex justify-start items-start w-full gap-y-2">
-              <View className="flex justify-start items-center w-full flex-row gap-x-4 h-16 border border-neutral-500/40 rounded-lg px-4">
-                <Lock size={20} color="#404040" />
-
-                <TextInput
-                  placeholder="Password"
-                  className="flex-1"
-                  secureTextEntry
-                />
-              </View>
-
-              {/* Redirect to Forgot Password screen */}
-              <View className="flex justify-between items-center w-full flex-row">
-                <Text />
-
-                <Text className="font-medium text-purple-700/50 tracking-wide text-sm">
-                  Forgot Password?
-                </Text>
-              </View>
-            </View>
           </View>
 
           {/* Bottom section */}
@@ -86,23 +76,9 @@ const SignIn = () => {
             {/* Sign-in button */}
             <TouchableOpacity className="bg-purple-700/50 w-full py-4 rounded-lg">
               <Text className="text-white text-center text-lg font-semibold tracking-wide">
-                Login
+                Next
               </Text>
             </TouchableOpacity>
-
-            {/* Redirect to sign up screen */}
-            <View className="flex justify-center items-center w-full flex-row gap-x-1">
-              <Text className="text-sm text-neutral-800 tracking-wide">
-                Don't have an account?
-              </Text>
-
-              <Text
-                onPress={() => router.replace("/(auth)/sign-up/step-1")}
-                className="font-medium text-purple-700/50 tracking-wide"
-              >
-                Register
-              </Text>
-            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -110,4 +86,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUpStep1;
