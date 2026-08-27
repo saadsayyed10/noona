@@ -58,9 +58,9 @@ export const registerUserController = async (req: Request, res: Response) => {
     Authorization: No    
 */
 export const loginUserController = async (req: Request, res: Response) => {
-  const { usernameorEmail, password } = req.body;
+  const { usernameOrEmail, password } = req.body;
 
-  const data = { usernameorEmail, password };
+  const data = { usernameOrEmail, password };
   // Throw error if fields are left null
   if (!data) {
     errorMessage = "Please do not leave any fields empty";
@@ -70,7 +70,7 @@ export const loginUserController = async (req: Request, res: Response) => {
 
   try {
     const { token, user } = await authServices.loginUserService(
-      usernameorEmail,
+      usernameOrEmail,
       password,
     );
 
