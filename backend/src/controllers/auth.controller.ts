@@ -50,3 +50,36 @@ export const registerUserController = async (req: Request, res: Response) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+/*
+    Controller: To sign-in into user account
+    Method: POST
+    Endpoint: /api/auth/sign-in
+    Authorization: No    
+*/
+export const loginUserController = async (req: Request, res: Response) => {
+  const { usernameorEmail, password } = req.body;
+
+  const data = { usernameorEmail, password };
+  // Throw error if fields are left null
+  if (!data) {
+    errorMessage = "Please do not leave any fields empty";
+    console.log(errorMessage);
+    return res.status(400).json({ error: errorMessage });
+  }
+
+  try {
+    const { token, user } = await authServices.loginUserService(
+      usernameorEmail,
+      password,
+    );
+
+    res.status(200).json({
+      message: `Dear ${user.name}, welcome back to Noona`,
+      token,
+    });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};
