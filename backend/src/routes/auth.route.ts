@@ -8,5 +8,6 @@ const authRouter = Router();
 
 // POST endpoints
 authRouter.post("/sign-up", controllers.registerUserController);
+authRouter.post("/sign-in", controllers.loginUserController);
 
 export default authRouter;
